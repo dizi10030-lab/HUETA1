@@ -3,7 +3,7 @@ import { GoogleGenAI } from "@google/genai";
 const getGeminiClient = () => {
   const apiKey = process.env.API_KEY;
   if (!apiKey) {
-    throw new Error("API Key is missing. Please check your environment variables.");
+    throw new Error("API Key не найден. Проверьте настройки Environment Variables (API_KEY) в Vercel.");
   }
   return new GoogleGenAI({ apiKey });
 };
@@ -91,9 +91,7 @@ export const analyzeSafetyImage = async (file: File, userDescription: string): P
     return response.text || "Не удалось получить ответ от модели.";
   } catch (error: any) {
     console.error("Gemini Analysis Error:", error);
-    if (error.message?.includes("API_KEY")) {
-      throw new Error("Неверный или отсутствующий API ключ.");
-    }
-    throw new Error("Произошла ошибка при анализе изображения. Попробуйте еще раз.");
+    // Explicitly throw the error message so the UI can display it
+    throw new Error(error.message || "Произошла неизвестная ошибка при анализе.");
   }
 };

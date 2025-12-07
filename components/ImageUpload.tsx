@@ -79,11 +79,11 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({ selectedImage, onImage
           </div>
         </div>
       ) : (
-        <div className="relative rounded-xl overflow-hidden border border-slate-200 bg-slate-100 group">
+        <div className="relative rounded-xl overflow-hidden border border-slate-200 bg-slate-50 group">
           <img 
             src={selectedImage} 
             alt="Preview" 
-            className="w-full h-64 object-cover"
+            className="w-full h-64 object-contain"
           />
           {!disabled && (
             <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
