@@ -73,7 +73,6 @@ export const analyzeSafetyImage = async (file: File, userDescription: string): P
     `;
 
     // Using gemini-2.5-flash for speed and multimodal capabilities.
-    // Added googleSearch tool to help look up specific FNP clauses if internal knowledge needs verification.
     const response = await client.models.generateContent({
       model: 'gemini-2.5-flash',
       contents: {
@@ -83,15 +82,34 @@ export const analyzeSafetyImage = async (file: File, userDescription: string): P
         ]
       },
       config: {
-        temperature: 0.2, // Low temperature for more factual/analytical output
+        temperature: 0.2,
         tools: [{ googleSearch: {} }], 
       }
     });
 
-    return response.text || "Не удалось получить ответ от модели.";
+    return response.text || "Не удалось получить ответ от модели (пустой текст).";
   } catch (error: any) {
-    console.error("Gemini Analysis Error:", error);
-    // Explicitly throw the error message so the UI can display it
-    throw new Error(error.message || "Произошла неизвестная ошибка при анализе.");
+    console.error("Gemini Analysis Error Full Object:", error);
+    
+    let errorMessage = "Произошла неизвестная ошибка при анализе.";
+    
+    if (error instanceof Error) {
+      errorMessage = error.message;
+    } else if (typeof error === 'string') {
+      errorMessage = error;
+    } else if (error && typeof error === 'object' && 'message' in error) {
+        errorMessage = String((error as any).message);
+    } else {
+        errorMessage = JSON.stringify(error);
+    }
+
+    // Friendly error mappings for common issues
+    if (errorMessage.includes("403") || errorMessage.includes("API key")) {
+        errorMessage = "Ошибка авторизации: Неверный API Key или он не установлен в Vercel Settings.";
+    } else if (errorMessage.includes("429") || errorMessage.includes("Quota")) {
+        errorMessage = "Превышен лимит запросов к API (Quota Exceeded).";
+    }
+
+    throw new Error(errorMessage);
   }
 };

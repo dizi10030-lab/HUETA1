@@ -83,7 +83,7 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({ selectedImage, onImage
           <img 
             src={selectedImage} 
             alt="Preview" 
-            className="w-full h-64 object-contain"
+            className="w-full h-64 object-contain bg-slate-100"
           />
           {!disabled && (
             <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
