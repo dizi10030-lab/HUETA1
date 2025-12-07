@@ -1,0 +1,5 @@
+{
+  "name": "PromSafety AI",
+  "description": "AI-powered assistant for Russian industrial safety compliance (FNP) analysis based on visual data and descriptions.",
+  "requestFramePermissions": []
+}
